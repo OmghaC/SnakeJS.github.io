@@ -73,6 +73,29 @@ function CreateApple(new_X, new_Y, _created)
 }
 
 
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function setCookie(cname, cvalue, days) {
+    var d = new Date();
+    d.setTime(d.getTime() + (days*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
 //Keypress listener
 document.onkeypress = function (e) {
     directionResolver(e.key)
@@ -111,6 +134,7 @@ function checkForCollisionWithTail()
         if(playerObj.x == tail[i].x && playerObj.y == tail[i].y )
         {
             clearInterval(main_clock);
+            CreateScoreBoard()
         }
     }
 }
@@ -151,6 +175,26 @@ function tailManagment()
         
 }
 
+function CreateScoreBoard()
+{
+    setCookie("LatestScore", tail.length, 31);
+    let latestScore = tail.length;
+    
+    if(latestScore > getCookie("HighScore"))
+    {
+        setCookie("HighScore", latestScore, 365);
+    }
+    else if(getCookie("HighScore") == "")
+    {
+        setCookie("HighScore", latestScore, 365);
+    }
+    
+    let scoreBoard_conatiner = document.createElement('div');
+    scoreBoard_conatiner.innerHTML = "<p>Your score: " + tail.length + "<br>"+ "Your highscore: " + getCookie("HighScore") + "</p><br><p>Press f5 to restart!</p>";
+    scoreBoard_conatiner.style.fontSize = "52px";
+    document.body.insertBefore(scoreBoard_conatiner, canvasPlacer)
+}
+
 //Function which moves our player object, and checking for collision with wall and apples
 function directionAnalyzer(dir)
 {
@@ -159,6 +203,7 @@ function directionAnalyzer(dir)
     if(playerObj.x > 9 || playerObj.x < 0 || playerObj.y > 9 || playerObj.y < 0)
     {
         clearInterval(main_clock);
+        CreateScoreBoard();
     }
 
     if(dir == "d")
