@@ -58,6 +58,39 @@ function CreateApple(new_X, new_Y, _created)
                 {
                     collision = true;
                 }
+                if(i == tail.length-1)
+                {
+                    console.log("test");
+                    let offsetX;
+                    let offsetY;
+                    switch(actualDir)
+                    {
+                        case "s":
+                            offsetX = 0;
+                            offsetY = -1;
+                            break;
+                        case "w":
+                            offsetX = 0;
+                            offsetY = 1;
+                            break;
+                        case "a":
+                            offsetX = 1;
+                            offsetY = 0;
+                            break;
+                        case "d":
+                            offsetX = -1;
+                            offsetY = 0;
+                            break;
+                    }
+                    let X_test = playerObj.x;
+                    let Y_test = playerObj.y;
+                    X_test += offsetX;
+                    Y_test += offsetY;
+                    if(this.x == X_test && this.y == Y_test)
+                    {
+                        collision = true;
+                    }
+                }
             }
             if(collision == false)
             {
